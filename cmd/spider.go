@@ -32,14 +32,16 @@ exit:
 		fmt.Println()
 		fmt.Print(util.Cyan("请选择"))
 		fmt.Println()
-		loopMenu := []string{"iciba", "douban", "hacknews"}
+		loopMenu := []string{"iciba", "douban", "hacknews", "other"}
 		choice := util.LoopInput("回车退出", loopMenu, false)
 		switch choice {
 		case 1:
 			scrapIciba()
 		case 2:
-			scrapIciba()
+			scrapDouban()
 		case 3:
+			scrapIciba()
+		case 4:
 			scrapIciba()
 		default:
 			break exit
@@ -62,6 +64,21 @@ func scrapIciba() {
 	}
 	log.Println(todaySentence)
 }
+
+func scrapDouban() {
+	var movies []DoubanMovie
+
+	pages := GetPages(DoubanBaseUrl)
+	for _, page := range pages {
+		doc, err := goquery.NewDocument(strings.Join([]string{DoubanBaseUrl, page.Url}, ""))
+		if err != nil {
+			log.Println(err)
+		}
+
+		movies = append(movies, ParseMovies(doc)...)
+	}
+}
+
 
 // GetHTTPHtmlContent 获取网站上爬取的数据
 func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, error) {
@@ -99,16 +116,28 @@ func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, e
 
 // GetSpecialData 得到具体的数据
 func GetSpecialData(htmlContent string, selector string) (string, error) {
-	dom, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
+
+    list, err := GetDataList(htmlContent, selector) 
 	if err != nil {
 		return "", err
 	}
-
-	var str string
-	dom.Find(selector).Each(func(i int, selection *goquery.Selection) {
+    
+    var str string
+    list.Each(func(i int, selection *goquery.Selection) {
 		str = selection.Text()
 	})
 	return str, nil
+}
+
+// GetDataList 得到数据列表
+func GetDataList(htmlContent string, selector string) (*goquery.Selection, error) {
+	dom, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
+	if err != nil {
+		return nil, err
+	}
+
+	list := dom.Find(selector)
+	return list, nil
 }
 
 func init() {
