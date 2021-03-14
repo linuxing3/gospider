@@ -33,19 +33,11 @@ exit:
 		fmt.Println()
 		fmt.Println(util.Cyan("欢迎使用管理程序"))
 		fmt.Println()
-		menuList := []string{"用户管理", "爬虫管理", "", "", "", ""}
+		menuList := []string{"爬虫", "数据"}
 		switch util.LoopInput("请选择: ", menuList, false) {
 		case 1:
 			spiderMenu()
 		case 2:
-			spiderMenu()
-		case 3:
-			spiderMenu()
-		case 4:
-			spiderMenu()
-		case 5:
-			spiderMenu()
-		case 6:
 			spiderMenu()
 		default:
 			break exit
