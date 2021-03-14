@@ -7,8 +7,8 @@ go run github.com/prisma/prisma-client-go generate
 rem 3. 运行
 rem go run main.go
 rem 4. 安装
-go build main.go
-go install main.go
+go build .
+go install .
 
 rem 5. 设置数据库
 deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts 
