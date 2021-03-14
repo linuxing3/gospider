@@ -15,6 +15,7 @@ import (
 
 var (
 	DocBodySelector = "document.querySelector('body')"
+	webSite = ""
 )
 
 // spiderCmd represents the spider command
@@ -25,7 +26,11 @@ var spiderCmd = &cobra.Command{
 Trojan is a CLI Command for Go that empowers proxy.
 to quickly create a web tunnel.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		spiderMenu()
+		if webSite == "douban" {
+			scrapDouban()
+		} else {
+			spiderMenu()
+		}
 	},
 }
 
@@ -152,4 +157,5 @@ func GetDataList(htmlContent string, selector string) (*goquery.Selection, error
 
 func init() {
 	rootCmd.AddCommand(spiderCmd)
+	spiderCmd.Flags().StringVarP(&webSite, "website", "t", "douban", "Choose a website")
 }

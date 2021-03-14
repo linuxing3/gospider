@@ -7,3 +7,7 @@ go run github.com/prisma/prisma-client-go generate
 rem 3. 运行
 rem go run main.go
 deno run -A --unstable ./create_table.ts
+rem headless-shell onwardlinux
+docker run -d -p 9222:9222 --rm --name headless-shell chromedp/headless-shell
+
+go build main.go

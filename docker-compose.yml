@@ -1,0 +1,25 @@
+version: '3'
+services:
+  spider-postgres:
+    image: "postgres" 
+    ports: 
+      - "9432:5432"
+    env_file:
+      - .env 
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/ 
+  chrome-headless-shell:
+    image: "chromedp/headless-shell:lates"
+    ports:
+      - "9222:9222"
+    env_file:
+      - .env
+    volumes:
+      - ./gospinder:/gospider
+    command:
+      - chmod +x /gospider && /gospider spider --website=douban
+    links:
+      - "spider-postgres"
+
+volumes:
+  postgres-data: 
