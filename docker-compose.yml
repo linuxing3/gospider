@@ -1,6 +1,6 @@
 version: '3'
 services:
-  spider-postgres:
+  db:
     image: postgres
     container_name: db
     restart: always
@@ -15,8 +15,6 @@ services:
   adminer:
     image: adminer
     container_name: adminer
-    depends_on:
-      - db
     links:
       - db
     restart: always
@@ -28,7 +26,7 @@ services:
       - POSTGRES_DB=spider
     ports:
       - 9433:8080
-  chrome-headless-shell:
+  spider:
     image: chromedp/headless-shell:latest
     container_name: spider
     depends_on:
