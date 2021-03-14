@@ -7,7 +7,11 @@ main:
     jsondb:
       path: "./vpsman.json"
     mysql:
-      path: "sqlite://localhost:3306"
+      path: "mysql://pi:20090909@192.168.1.200:3306"
+    post:
+      path: "DATABASE_URL = 'postgresql://pi:20090909@192.168.1.200:5432/vpsman?schema=public"
   server:
     iciba:
       host: "http://www.iciba.com"
+    douban:
+      host: "https://movies.douban.com/top250"

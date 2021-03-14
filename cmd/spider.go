@@ -13,6 +13,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	DocBodySelector = "document.querySelector('body')"
+)
+
 // spiderCmd represents the spider command
 var spiderCmd = &cobra.Command{
 	Use:   "spider",
@@ -49,63 +53,59 @@ exit:
 	}
 }
 
+// 爬取每日一词
 func scrapIciba() {
 
 	url := "http://news.iciba.com/"
 	selector := "body > div.screen > div.banner > div.swiper-container-place > div > div.swiper-slide.swiper-slide-0.swiper-slide-visible.swiper-slide-active > a.item.item-big > div.item-bottom"
-	sel := "document.querySelector('body')"
-	htmlContent, err := GetHTTPHtmlContent(url, selector, sel)
+	htmlContent, err := GetHTTPHtmlContent(url, selector, DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
-	todaySentence, err := GetSpecialData(htmlContent, ".chinese")
+	sentenceList, err := GetDataList(htmlContent, ".chinese")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var todaySentence string
+	sentenceList.Each(func(i int, selection *goquery.Selection) {
+		todaySentence = selection.Text()
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(todaySentence)
 }
 
+// 爬取douban最佳电影
 func scrapDouban() {
 
-	sel := "document.querySelector('body')"
-	pageSelector := "#content > div > div.article > div.paginator > a"
 	movieSelector := "#content > div > div.article > ol > li"
 
-	htmlContent, err := GetHTTPHtmlContent(DoubanBaseUrl, pageSelector, sel)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println("获取页面！")
+	pages := GetPages(DoubanBaseUrl)
 
-	pages, err := GetDataList(htmlContent, pageSelector)
-	if err != nil {
-		log.Fatal("No list")
-	}
-
-	// parse each page
-	pages.Each(func(i int, selection *goquery.Selection) {
-		url, _ := selection.Attr("href")
-		pageUrl := strings.Join([]string{DoubanBaseUrl, url}, "")
-		pageContent, _ := GetHTTPHtmlContent(pageUrl, movieSelector, sel)
-
-		// parsing move list
-		movieList, err := GetDataList(pageContent, movieSelector)
+	var movies []DoubanMovie
+	for index, page := range pages {
+		fmt.Printf("获取 %d 页！\n", index)
+		pageContent, _ := GetHTTPHtmlContent(page.Url, movieSelector, DocBodySelector)
+		pageDom, err := goquery.NewDocumentFromReader(strings.NewReader(pageContent))
 		if err != nil {
 			log.Fatal(err)
 		}
-		// parsing each movie
-		movieList.Each(func(i int, s *goquery.Selection) {
-			title := s.Find(".hd > a > span").Eq(0).Text()
-			desc := strings.TrimSpace(s.Find(".bd > p").Eq(0).Text())
-			movie := DoubanMovie{
-				Title: title,
-				Desc:  desc,
-			}
-			fmt.Println(movie.Title)
-		})
-	})
+		pageMovies := ParseMovies(pageDom)
+		movies = append(movies, pageMovies...)
+	}
+
+	// save movies
+	fmt.Println("保存电影记录到数据库！")
+	SaveMovies(movies)
 }
 
 // GetHTTPHtmlContent 获取网站上爬取的数据
+// url [string] 网址
+// selector [string] 必须显示的元素
+// sel [interface] 要抓取的元素
 func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, error) {
 	options := []chromedp.ExecAllocatorOption{
 		chromedp.Flag("headless", true), // debug使用
@@ -137,21 +137,6 @@ func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, e
 	}
 
 	return htmlContent, nil
-}
-
-// GetSpecialData 获取选择器元素的文本内容
-func GetSpecialData(htmlContent string, selector string) (string, error) {
-
-	list, err := GetDataList(htmlContent, selector)
-	if err != nil {
-		return "", err
-	}
-
-	var str string
-	list.Each(func(i int, selection *goquery.Selection) {
-		str = selection.Text()
-	})
-	return str, nil
 }
 
 // GetDataList 得到数据列表
