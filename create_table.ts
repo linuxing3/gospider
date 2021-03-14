@@ -27,11 +27,11 @@ class Movie extends Model {
 
 const env = config({ safe: true });
 export const postOptions = {
-  host: env["POST_HOST"],
-  username: env["POST_USERNAME"],
-  password: env["POST_PASSWORD"],
-  port: parseInt(env["POST_PORT"]),
-  database: env["POST_DATABASE"],
+  host: env["POSTGRES_HOST"],
+  username: env["POSTGRES_USER"],
+  password: env["POSTGRES_PASSWORD"],
+  port: parseInt(env["POSTGRES_PORT"]),
+  database: env["POST_DB"],
 };
 const connection = new PostgresConnector(postOptions);
 

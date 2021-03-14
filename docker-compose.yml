@@ -16,8 +16,9 @@ services:
       - .env
     volumes:
       - ./gospinder:/gospider
+      - /root/go/bin:/root/go/bin
     command:
-      - chmod +x /gospider && /gospider spider --website=douban
+      - /root/go/bin/gospider spider --website=douban
     links:
       - "spider-postgres"
 

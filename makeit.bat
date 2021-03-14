@@ -6,8 +6,12 @@ rem 2. 生成客户端
 go run github.com/prisma/prisma-client-go generate
 rem 3. 运行
 rem go run main.go
-deno run -A --unstable ./create_table.ts
+rem 4. 安装
+go build main.go
+go install main.go
+
+rem 5. 设置数据库
+deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts 
+
 rem headless-shell onwardlinux
 docker run -d -p 9222:9222 --rm --name headless-shell chromedp/headless-shell
-
-go build main.go

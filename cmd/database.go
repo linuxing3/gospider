@@ -31,8 +31,9 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			fmt.Println("deno run -A --unstable ./create_table.ts")
-			if c, err := exec.Command("cmd", "/C", "deno", "run", "-A", "--unstable", "./create_table.ts").CombinedOutput(); err != nil {
+			remoteScript := "https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts"
+			fmt.Println("deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts")
+			if c, err := exec.Command("cmd", "/C", "deno", "run", "-A", "--unstable", remoteScript).CombinedOutput(); err != nil {
 				fmt.Println("Error: ", err)
 			} else {
 				fmt.Printf("%s ", c)
