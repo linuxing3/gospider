@@ -1,26 +1,32 @@
 version: '3'
 services:
   spider-postgres:
-    image: "postgres" 
+    image: postgres
+    restart: always
     ports: 
-      - "9432:5432"
+      - 9432:5432
     env_file:
       - .env 
     volumes:
       - postgres-data:/var/lib/postgresql/data/ 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9433:8080
   chrome-headless-shell:
     image: "chromedp/headless-shell:latest"
+    restart: always
     ports:
-      - "9222:9222"
+      - 9222:9222
     env_file:
       - .env
     volumes:
-      - ./gospinder:/gospider
       - /root/go/bin:/root/go/bin
     command:
       - /root/go/bin/gospider spider --website=douban
     links:
-      - "spider-postgres"
+      - spider-postgres
 
 volumes:
   postgres-data: 
