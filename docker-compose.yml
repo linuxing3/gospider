@@ -44,8 +44,9 @@ services:
       - POSTGRES_DB=spider
     volumes:
       - /root/go/bin:/root/go/bin
+      - ./crontab_job:/etc/cron.d/container_cronjob
     command:
-      - /root/go/bin/gospider spider --website=douban
+      - chmod 644 /etc/cron.d/container_cronjob && cron
 
 volumes:
   postgres-data: 

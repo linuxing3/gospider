@@ -41,7 +41,7 @@ exit:
 		fmt.Println()
 		fmt.Print(util.Cyan("请选择"))
 		fmt.Println()
-		loopMenu := []string{"iciba", "douban", "hacknews", "example"}
+		loopMenu := []string{"iciba", "douban", "hacknews", "docker"}
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
@@ -51,11 +51,18 @@ exit:
 		case 3:
 			scrapIciba()
 		case 4:
-			ExampleScrape()
+			spiderDocker("")
 		default:
 			break exit
 		}
 	}
+}
+
+
+func spiderDocker(subCommand string)  {
+
+	util.ExecCommand("docker exec -it spider /root/go/bin/gospider spider")
+	
 }
 
 // 爬取每日一词

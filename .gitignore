@@ -3,3 +3,5 @@
 *.sqlite
 *.leveldb
 vpsman.json
+gospider
+gospider.exe
