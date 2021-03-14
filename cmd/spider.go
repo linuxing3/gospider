@@ -32,8 +32,8 @@ exit:
 		fmt.Println()
 		fmt.Print(util.Cyan("请选择"))
 		fmt.Println()
-		loopMenu := []string{"iciba", "douban", "hacknews", "other"}
-		choice := util.LoopInput("回车退出", loopMenu, false)
+		loopMenu := []string{"iciba", "douban", "hacknews", "example"}
+		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
 			scrapIciba()
@@ -42,7 +42,7 @@ exit:
 		case 3:
 			scrapIciba()
 		case 4:
-			scrapIciba()
+			ExampleScrape()
 		default:
 			break exit
 		}
@@ -66,20 +66,44 @@ func scrapIciba() {
 }
 
 func scrapDouban() {
-	var movies []DoubanMovie
 
-	pages := GetPages(DoubanBaseUrl)
-	for _, page := range pages {
-		doc, err := goquery.NewDocument(strings.Join([]string{DoubanBaseUrl, page.Url}, ""))
-		if err != nil {
-			log.Println(err)
-		}
+	sel := "document.querySelector('body')"
+	pageSelector := "#content > div > div.article > div.paginator > a"
+	movieSelector := "#content > div > div.article > ol > li"
 
-		movies = append(movies, ParseMovies(doc)...)
+	htmlContent, err := GetHTTPHtmlContent(DoubanBaseUrl, pageSelector, sel)
+	if err != nil {
+		log.Fatal(err)
 	}
-    log.Println(movies)
-}
 
+	pages, err := GetDataList(htmlContent, pageSelector)
+	if err != nil {
+		log.Fatal("No list")
+	}
+
+	// parse each page
+	pages.Each(func(i int, selection *goquery.Selection) {
+		url, _ := selection.Attr("href")
+		pageUrl := strings.Join([]string{DoubanBaseUrl, url}, "")
+		pageContent, _ := GetHTTPHtmlContent(pageUrl, movieSelector, sel)
+
+		// parsing move list
+		movieList, err := GetDataList(pageContent, movieSelector)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// parsing each movie
+		movieList.Each(func(i int, s *goquery.Selection) {
+			title := s.Find(".hd > a > span").Eq(0).Text()
+			desc := strings.TrimSpace(s.Find(".bd > p").Eq(0).Text())
+			movie := DoubanMovie{
+				Title: title,
+				Desc:  desc,
+			}
+			fmt.Println(movie.Title)
+		})
+	})
+}
 
 // GetHTTPHtmlContent 获取网站上爬取的数据
 func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, error) {
@@ -115,16 +139,16 @@ func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, e
 	return htmlContent, nil
 }
 
-// GetSpecialData 得到具体的数据
+// GetSpecialData 获取选择器元素的文本内容
 func GetSpecialData(htmlContent string, selector string) (string, error) {
 
-    list, err := GetDataList(htmlContent, selector) 
+	list, err := GetDataList(htmlContent, selector)
 	if err != nil {
 		return "", err
 	}
-    
-    var str string
-    list.Each(func(i int, selection *goquery.Selection) {
+
+	var str string
+	list.Each(func(i int, selection *goquery.Selection) {
 		str = selection.Text()
 	})
 	return str, nil
@@ -143,14 +167,4 @@ func GetDataList(htmlContent string, selector string) (*goquery.Selection, error
 
 func init() {
 	rootCmd.AddCommand(spiderCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// spiderCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// spiderCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
