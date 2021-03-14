@@ -4,7 +4,7 @@ generator db {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://spider:20090909@db:5432/spider?schema=public" 
 }
 
 model movies {

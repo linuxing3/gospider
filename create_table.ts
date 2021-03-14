@@ -29,9 +29,9 @@ const env = config({ safe: true });
 export const postOptions = {
   host: "127.0.0.1",
   port: 5432,
-  username: env["POSTGRES_USER"],
-  password: env["POSTGRES_PASSWORD"],
-  database: env["POSTGRES_DB"],
+  username: "spider",
+  password: "20090909",
+  database: "spider",
 };
 const connection = new PostgresConnector(postOptions);
 
