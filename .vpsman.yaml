@@ -1,0 +1,27 @@
+main:
+  host:
+    default: "localhost"
+    port: 8888
+    ssl: false
+  vps:
+    xunqinji: "xunqinji.top"
+    dongxishijie: "dongxishijie.xyz"
+    port: 22
+  db:
+    sqlite:
+      path: "./vpsman.sqlite"
+    leveldb:
+      path: "./vpsman.leveldb"
+    jsondb:
+      path: "./vpsman.json"
+    mysql:
+      path: "sqlite://localhost:3306"
+  server:
+    xray:
+      path: "./xray.config.json"
+    trojan:
+      path: "./trojan.config.json"
+    nginx:
+      path: "./nginx.config.json"
+  notion:
+    token: "aae5a75e6ff91770057e7878a3757dd19ee760373495be29a8219c4bc190c899e80dc8219ca1ef6a5620f7b2a60f1ea0ec668b85384b19bd26282f8370b4e4762798946e03a04f1d0e7dfad30bc8"

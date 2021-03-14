@@ -1,0 +1,6 @@
+*.exe
+*.db
+*.sqlite
+*.leveldb
+*.leveldb
+vpsman.json
