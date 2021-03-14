@@ -24,3 +24,6 @@ echo "6. 启动docker-compose"
 echo "======================================================================"
 
 docker-compose up -d --remove-orphans
+
+echo "开始抓取"
+echo "docker exec -it spider /root/go/bin/gospider spider"
