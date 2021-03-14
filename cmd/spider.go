@@ -77,6 +77,7 @@ func scrapDouban() {
 
 		movies = append(movies, ParseMovies(doc)...)
 	}
+    log.Println(movies)
 }
 
 
