@@ -1,15 +1,15 @@
 main:
   db:
     sqlite:
-      path: "./vpsman.sqlite"
+      path: "./spider.sqlite"
     leveldb:
-      path: "./vpsman.leveldb"
+      path: "./spider.leveldb"
     jsondb:
-      path: "./vpsman.json"
+      path: "./spider.json"
     mysql:
-      path: "mysql://pi:20090909@192.168.1.200:3306"
+      path: "mysql://spider:20090909@db:3306"
     post:
-      path: "DATABASE_URL = 'postgresql://pi:20090909@192.168.1.200:5432/vpsman?schema=public"
+      path: "DATABASE_URL = 'postgresql://spider:20090909@db:5432/spider?schema=public"
   server:
     iciba:
       host: "http://www.iciba.com"

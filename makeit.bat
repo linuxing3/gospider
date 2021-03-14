@@ -7,7 +7,6 @@ go run github.com/prisma/prisma-client-go generate
 rem 3. 运行
 rem go run main.go
 rem 4. 安装
-go build .
 go install .
 
 rem 5. 设置数据库
