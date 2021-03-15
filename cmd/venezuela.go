@@ -21,7 +21,9 @@ var (
 )
 
 // GetPages 获取分页
-func GetArticles(url string) (articles []GoogleNewsArticle) {
+func GetArticles(url string, keyword string) (articles []GoogleNewsArticle) {
+
+	VenBaseUrl = strings.Replace(VenBaseUrl, "venezuela", keyword, 1)
 	htmlContent, err := GetHTTPHtmlContent(VenBaseUrl, VenAritcleSelector, DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
@@ -45,16 +47,7 @@ func GetArticles(url string) (articles []GoogleNewsArticle) {
 }
 
 func SaveArticle(articles []GoogleNewsArticle)  {
-	client := db.NewClient()
-	if err := client.Prisma.Connect(); err != nil {
-		log.Fatalln(err)
-	}
-
-	defer func() {
-		if err := client.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
+	client := InitPrismaClient()
 
 	ctx := context.Background()
 	for _, article := range articles {

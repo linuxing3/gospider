@@ -65,7 +65,7 @@ exit:
 // 爬取scrapGoogleNews
 func scrapGoogleNews() {
 
-	articles := GetArticles(VenBaseUrl)
+	articles := GetArticles(VenBaseUrl, "venezuela")
 	SaveArticle(articles)
 
 }

@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 
+	"github.com/linuxing3/gospider/prisma/db"
 	"github.com/linuxing3/vpsman/util"
 	"github.com/spf13/cobra"
 )
@@ -18,6 +20,21 @@ Denodb is tools to generate models.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		databaseMenu()
 	},
+}
+
+// InitPrismaClient 初始化PrismaClient
+func InitPrismaClient() *db.PrismaClient{
+	client := db.NewClient()
+	if err := client.Prisma.Connect(); err != nil {
+		log.Fatalln(err)
+	}
+
+	defer func() {
+		if err := client.Prisma.Disconnect(); err != nil {
+			panic(err)
+		}
+	}()
+	return client
 }
 
 // TrojanMenu 控制TrojanMenu
