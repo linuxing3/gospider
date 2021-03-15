@@ -4,21 +4,27 @@ generator db {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://spider:20090909@db:5432/spider?schema=public" 
+  url      = "postgresql://spider:20090909@db:5432/spider?schema=public"
 }
 
 model movies {
-  id          Int      @id @default(autoincrement())
-  title       String?
-  subtitle    String?
-  other       String?
-  desc        String?
-  year        String?
-  area        String?
-  tag         String?
-  star        String?
-  comment     String?
-  quote       String?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  title      String?
+  subtitle   String?
+  other      String?
+  desc       String?
+  year       String?
+  area       String?
+  tag        String?
+  star       String?
+  comment    String?
+  quote      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model articles {
+  id    Int     @id @default(autoincrement())
+  title String?
+  url   String?
 }

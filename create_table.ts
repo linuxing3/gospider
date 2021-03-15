@@ -33,6 +33,17 @@ class Movie extends Model {
   };
 }
 
+class Article extends Model {
+  static table = "articles";
+  static timestamps = true;
+
+  static fields = {
+    id: { primaryKey: true, autoIncrement: true },
+    title: DataTypes.STRING,
+    url: DataTypes.STRING,
+  };
+}
+
 const env = config({ safe: true });
 export const postOptions = {
   host: "127.0.0.1",
@@ -44,6 +55,6 @@ export const postOptions = {
 const connection = new PostgresConnector(postOptions);
 
 const postdb = new Database(connection)
-postdb.link([Movie, User, Militant, Member, Document, Flight]);
-await postdb.sync({ drop: true });
+postdb.link([Movie, Article, User, Militant, Member, Document, Flight]);
+await postdb.sync({ drop: false });
 await postdb.close();
