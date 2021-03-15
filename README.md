@@ -128,3 +128,7 @@ echo "postgresql://spider:20090909@db:5432/spider?schema=public"
 deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts"
 ```
 ## 使用`go admin`构建前端界面
+
+```bash
+go install github.com/GoAdminGroup/go-admin/adm
+```

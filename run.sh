@@ -17,7 +17,8 @@ echo "go install ."
 
 echo "5. 初始化数据库, 链接如下："
 echo "postgresql://spider:20090909@db:5432/spider?schema=public"
-echo "deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts"
+echo "deno install -f -A --unstable ./create_table.ts"
+echo "create_table"
 
 echo "======================================================================"
 echo "6. 启动docker-compose"
