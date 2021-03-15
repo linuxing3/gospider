@@ -1,1 +1,2 @@
-* * 1 * * /root/go/bin/gospider spider
+30 7 * * * docker exec -it spider /root/go/bin/gospider spider --website=googlenews
+30 7 * * * docker exec -it spider /root/go/bin/gospider spider --website=googlenews --keyword=china
