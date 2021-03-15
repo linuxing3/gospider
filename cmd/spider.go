@@ -62,10 +62,11 @@ exit:
 	}
 }
 
+// 爬取scrapGoogleNews
 func scrapGoogleNews() {
 
 	articles := GetArticles(VenBaseUrl)
-	fmt.Println(articles)
+	SaveArticle(articles)
 
 }
 

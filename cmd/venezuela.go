@@ -39,6 +39,7 @@ func GetArticles(url string) (articles []GoogleNewsArticle) {
 			Title: title,
 			Url:  pageUrl,
 		})
+		fmt.Println(title)
 	})
 	return articles
 }
