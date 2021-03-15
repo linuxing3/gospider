@@ -115,7 +115,16 @@ func ParseMovies(doc *goquery.Document) (movies []DoubanMovie) {
 // SaveMovies 保存电影记录到数据库
 func SaveMovies(movies []DoubanMovie)  {
 
-	client := InitPrismaClient()
+	client := db.NewClient()
+	if err := client.Prisma.Connect(); err != nil {
+		log.Fatalln(err)
+	}
+
+	defer func() {
+		if err := client.Prisma.Disconnect(); err != nil {
+			panic(err)
+		}
+	}()
 
 	ctx := context.Background()
 	for _, movie := range movies {

@@ -47,7 +47,16 @@ func GetArticles(url string, keyword string) (articles []GoogleNewsArticle) {
 }
 
 func SaveArticle(articles []GoogleNewsArticle)  {
-	client := InitPrismaClient()
+	client := db.NewClient()
+	if err := client.Prisma.Connect(); err != nil {
+		log.Fatalln(err)
+	}
+
+	defer func() {
+		if err := client.Prisma.Disconnect(); err != nil {
+			panic(err)
+		}
+	}()
 
 	ctx := context.Background()
 	for _, article := range articles {
