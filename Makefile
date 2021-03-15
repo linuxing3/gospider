@@ -71,7 +71,17 @@ docker-up:
 db-init:
 	deno run -A --unstable ./create_table.ts
 
-spider-douban:
+spider:
 	docker exec -it spider /root/go/bin/gospider spider
+
+spider-douban:
+	docker exec -it spider /root/go/bin/gospider spider --website=douban
+
+spider-googlenews:
+	docker exec -it spider /root/go/bin/gospider spider --website=googlenews
+
+spider-iciba:
+	docker exec -it spider /root/go/bin/gospider spider --website=iciba
+
 
 .PHONY: all install-cli init-project serve build generate test black-box-test user-acceptance-test ready-for-data clean

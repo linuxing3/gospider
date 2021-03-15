@@ -15,7 +15,7 @@ import (
 
 var (
 	DocBodySelector = "document.querySelector('body')"
-	webSite = ""
+	webSite         = ""
 )
 
 // spiderCmd represents the spider command
@@ -28,6 +28,10 @@ to quickly create a web tunnel.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if webSite == "douban" {
 			scrapDouban()
+		} else if webSite == "googlenews" {
+			scrapGoogleNews()
+		} else if webSite == "iciba" {
+			scrapIciba()
 		} else {
 			spiderMenu()
 		}
@@ -58,12 +62,11 @@ exit:
 	}
 }
 
-
-func scrapGoogleNews()  {
+func scrapGoogleNews() {
 
 	articles := GetArticles(VenBaseUrl)
 	fmt.Println(articles)
-	
+
 }
 
 // 爬取每日一词
