@@ -16,6 +16,7 @@ import (
 var (
 	DocBodySelector = "document.querySelector('body')"
 	webSite         = ""
+	keyWord         = ""
 )
 
 // spiderCmd represents the spider command
@@ -29,7 +30,7 @@ to quickly create a web tunnel.`,
 		if webSite == "douban" {
 			scrapDouban()
 		} else if webSite == "googlenews" {
-			scrapGoogleNews()
+			scrapGoogleNews(keyWord)
 		} else if webSite == "iciba" {
 			scrapIciba()
 		} else {
@@ -55,7 +56,7 @@ exit:
 		case 3:
 			scrapIciba()
 		case 4:
-			scrapGoogleNews()
+			scrapGoogleNews("venezuela")
 		default:
 			break exit
 		}
@@ -63,9 +64,9 @@ exit:
 }
 
 // 爬取scrapGoogleNews
-func scrapGoogleNews() {
+func scrapGoogleNews(keyword string) {
 
-	articles := GetArticles(VenBaseUrl, "venezuela")
+	articles := GetArticles(VenBaseUrl, keyword)
 	SaveArticle(articles)
 
 }
@@ -170,4 +171,5 @@ func GetDataList(htmlContent string, selector string) (*goquery.Selection, error
 func init() {
 	rootCmd.AddCommand(spiderCmd)
 	spiderCmd.Flags().StringVarP(&webSite, "website", "t", "douban", "Choose a website")
+	spiderCmd.Flags().StringVarP(&keyWord, "keyword", "k", "venezuela", "Choose a keyword to query")
 }
