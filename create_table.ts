@@ -4,7 +4,6 @@ import {
   DataTypes,
   Model,
 } from "https://deno.land/x/denodb/mod.ts";
-import { config } from "https://deno.land/x/dotenv/mod.ts";
 import { prompt, Input, Number, Confirm, Checkbox } from "https://deno.land/x/cliffy/prompt/mod.ts";
 
 import {
@@ -55,8 +54,6 @@ class Article extends Model {
     url: DataTypes.STRING,
   };
 }
-
-const env = config({ safe: true });
 
 const defaultTables = [Movie, Article, User, Militant, Member, Document, Flight]
 
