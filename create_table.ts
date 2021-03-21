@@ -13,6 +13,7 @@ import {
   Document,
   Flight
 } from "https://raw.githubusercontent.com/linuxing3/deno-game-monitor/develop/denodb/mock/CoreModels.ts"
+import { models } from "https://raw.githubusercontent.com/linuxing3/deno-game-monitor/develop/denodb/mock/models.index.denodb.ts"
 
 class Movie extends Model {
   static table = "movies";
@@ -55,6 +56,6 @@ export const postOptions = {
 const connection = new PostgresConnector(postOptions);
 
 const postdb = new Database(connection)
-postdb.link([Movie, Article, User, Militant, Member, Document, Flight]);
+postdb.link([Movie, Article, User, Militant, Member, Document, Flight, ...models]);
 await postdb.sync({ drop: false });
 await postdb.close();
