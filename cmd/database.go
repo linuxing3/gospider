@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os/exec"
 
 	"github.com/linuxing3/gospider/prisma/db"
 	"github.com/linuxing3/vpsman/util"
@@ -22,7 +21,7 @@ Denodb is tools to generate models.`,
 	},
 }
 
-// InitPrismaClient 初始化PrismaClient
+// TODO: InitPrismaClient 初始化PrismaClient, 不能成功调用,因为context不同
 func InitPrismaClient() *db.PrismaClient{
 	client := db.NewClient()
 	if err := client.Prisma.Connect(); err != nil {
@@ -48,35 +47,17 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			remoteScript := "https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts"
-			fmt.Println("deno run -A --unstable https://raw.githubusercontent.com/linuxing3/gospider/main/create_table.ts")
-			if c, err := exec.Command("cmd", "/C", "deno", "run", "-A", "--unstable", remoteScript).CombinedOutput(); err != nil {
-				fmt.Println("Error: ", err)
-			} else {
-				fmt.Printf("%s ", c)
-			}
+			fmt.Println("deno run -A --unstable ./create_table.ts")
+			util.ExecCommand("make create-table")
 		case 2:
 			fmt.Println("go run github.com/prisma/prisma-client-go generate")
-			if c, err := exec.Command("cmd", "/C", "go", "run", "github.com/prisma/prisma-client-go", "generate").CombinedOutput(); err != nil {
-				fmt.Println("Error: ", err)
-			} else {
-				fmt.Printf("%s\n", c)
-			}
+			util.ExecCommand("make prisma-generate")
 		case 3:
-			// util.ExecCommand("go run github.com/prisma/prisma-client-go introspect")
-			if c, err := exec.Command("cmd", "/C", "go", "run", "github.com/prisma/prisma-client-go", "introspect").CombinedOutput(); err != nil {
-				fmt.Println("Error: ", err)
-			} else {
-				fmt.Printf("%s ", c)
-			}
+			fmt.Println("go run github.com/prisma/prisma-client-go introspect")
+			util.ExecCommand("make prisma-introspect")
 		case 4:
-			// util.ExecCommand("go run github.com/prisma/prisma-client-go db push --preview-feature")
-			if c, err := exec.Command("cmd", "/C", "go", "run", "github.com/prisma/prisma-client-go", "db", "push", "--preview-feature").CombinedOutput(); err != nil {
-				fmt.Println("Error: ", err)
-			} else {
-				fmt.Printf("%s ", c)
-
-			}
+			fmt.Println("go run github.com/prisma/prisma-client-go db push --preview-feature")
+			util.ExecCommand("make prisma-push")
 		default:
 			break exit
 		}

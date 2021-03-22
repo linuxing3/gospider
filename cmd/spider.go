@@ -22,10 +22,10 @@ var (
 // spiderCmd represents the spider command
 var spiderCmd = &cobra.Command{
 	Use:   "spider",
-	Short: "A brief description of your command",
+	Short: "Go powered Spider",
 	Long: ` About usage of using spider. For example: 
-Trojan is a CLI Command for Go that empowers proxy.
-to quickly create a web tunnel.`,
+Gospider is a CLI Command for Go that crawl web contents.
+to quickly create records in postgressql.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if webSite == "douban" {
 			scrapDouban()
@@ -50,13 +50,13 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			scrapIciba()
+			util.ExecCommand("make spider")
 		case 2:
-			scrapDouban()
+			util.ExecCommand("make spider-douban")
 		case 3:
-			scrapIciba()
+			util.ExecCommand("make spider-iciba")
 		case 4:
-			scrapGoogleNews("venezuela")
+			util.ExecCommand("make spider-googlenews")
 		default:
 			break exit
 		}

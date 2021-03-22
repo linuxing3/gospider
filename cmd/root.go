@@ -33,12 +33,16 @@ exit:
 		fmt.Println()
 		fmt.Println(util.Cyan("欢迎使用管理程序"))
 		fmt.Println()
-		menuList := []string{"网络爬虫", "数据库管理"}
+		menuList := []string{"网络爬虫", "数据库管理", "启动docker", "停止docker"}
 		switch util.LoopInput("请选择: ", menuList, false) {
 		case 1:
 			spiderMenu()
 		case 2:
 			databaseMenu()
+		case 3:
+			 util.ExecCommand("make docker-up")
+		case 4:
+			 util.ExecCommand("make docker-down")
 		default:
 			break exit
 		}

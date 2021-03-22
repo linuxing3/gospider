@@ -65,10 +65,12 @@ prisma-generate:
 
 # docker
 docker-up:
-	# bash ./run.sh
 	docker-compose up -d --remove-orphans
 
-db-init:
+docker-down:
+	docker-compose down
+
+create-table:
 	deno run -A --unstable ./create_table.ts
 
 spider:
