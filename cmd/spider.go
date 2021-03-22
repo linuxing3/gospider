@@ -53,13 +53,13 @@ exit:
 			script := "docker exec -it spider /root/go/bin/gospider spider"
 			util.ExecCommand(script)
 		case 2:
-			script :="docker exec -it spider /root/go/bin/gospider spider --website=douban"
+			script := "docker exec -it spider /root/go/bin/gospider spider --website=douban"
 			util.ExecCommand(script)
 		case 3:
-			script :="docker exec -it spider /root/go/bin/gospider spider --website=iciba"
+			script := "docker exec -it spider /root/go/bin/gospider spider --website=iciba"
 			util.ExecCommand(script)
 		case 4:
-			script :="docker exec -it spider /root/go/bin/gospider spider --website=googlenews"
+			script := "docker exec -it spider /root/go/bin/gospider spider --website=googlenews"
 			util.ExecCommand(script)
 		default:
 			break exit
