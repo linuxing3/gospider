@@ -47,15 +47,40 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
+			fmt.Println("")
+			fmt.Println("Tips:")
+			fmt.Println("=====================================================")
 			fmt.Println("create_table")
+			fmt.Println("=====================================================")
+			fmt.Println("")
 		case 2:
+			fmt.Println("")
+			fmt.Println("Tips:")
+			fmt.Println("=====================================================")
 			fmt.Println("deno run -A --unstable ./create_table.ts")
+			fmt.Println("=====================================================")
+			fmt.Println("")
 		case 3:
+			fmt.Println("")
+			fmt.Println("Tips:")
+			fmt.Println("=====================================================")
 			fmt.Println("go run github.com/prisma/prisma-client-go generate")
+			fmt.Println("=====================================================")
+			fmt.Println("")
 		case 4:
+			fmt.Println("")
+			fmt.Println("Tips:")
+			fmt.Println("=====================================================")
 			fmt.Println("go run github.com/prisma/prisma-client-go introspect")
+			fmt.Println("=====================================================")
+			fmt.Println("")
 		case 5:
+			fmt.Println("")
+			fmt.Println("Tips:")
+			fmt.Println("=====================================================")
 			fmt.Println("go run github.com/prisma/prisma-client-go db push --preview-feature")
+			fmt.Println("=====================================================")
+			fmt.Println("")
 		default:
 			break exit
 		}

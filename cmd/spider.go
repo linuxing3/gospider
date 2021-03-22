@@ -50,13 +50,17 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			util.ExecCommand("make spider")
+			script := "docker exec -it spider /root/go/bin/gospider spider"
+			util.ExecCommand(script)
 		case 2:
-			util.ExecCommand("make spider-douban")
+			script :="docker exec -it spider /root/go/bin/gospider spider --website=douban"
+			util.ExecCommand(script)
 		case 3:
-			util.ExecCommand("make spider-iciba")
+			script :="docker exec -it spider /root/go/bin/gospider spider --website=iciba"
+			util.ExecCommand(script)
 		case 4:
-			util.ExecCommand("make spider-googlenews")
+			script :="docker exec -it spider /root/go/bin/gospider spider --website=googlenews"
+			util.ExecCommand(script)
 		default:
 			break exit
 		}
