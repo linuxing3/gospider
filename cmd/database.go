@@ -47,15 +47,15 @@ exit:
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			util.ExecCommand("create_table")
+			fmt.Println("create_table")
 		case 2:
-			util.ExecCommand("deno run -A --unstable ./create_table.ts")
+			fmt.Println("deno run -A --unstable ./create_table.ts")
 		case 3:
-			util.ExecCommand("go run github.com/prisma/prisma-client-go generate")
+			fmt.Println("go run github.com/prisma/prisma-client-go generate")
 		case 4:
-			util.ExecCommand("go run github.com/prisma/prisma-client-go introspect")
+			fmt.Println("go run github.com/prisma/prisma-client-go introspect")
 		case 5:
-			util.ExecCommand("go run github.com/prisma/prisma-client-go db push --preview-feature")
+			fmt.Println("go run github.com/prisma/prisma-client-go db push --preview-feature")
 		default:
 			break exit
 		}

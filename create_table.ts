@@ -103,15 +103,15 @@ async function menu() {
   // TODO: choose tables model from list by table name
   if (answers.tables !== undefined) {
     answers.tables.forEach((v) => {
+      console.log("Adding extra tables for you...")
       defaultTables.push(extraTables[v])
     })
   }
   if (answers.procede === true) {
-    console.log("Creating tables for  you...")
+    console.log("Creating tables for you...")
     createTable(mergedOptions, defaultTables)
   } else {
-    console.log("Deleting tables for  you...")
-    deleteTable(mergedOptions, defaultTables)
+    console.log("Quit")
   }
 }
 
