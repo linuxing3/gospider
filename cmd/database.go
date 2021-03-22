@@ -43,21 +43,19 @@ exit:
 		fmt.Println()
 		fmt.Print(util.Cyan("请选择"))
 		fmt.Println()
-		loopMenu := []string{"创建表格", "创建Prisma客户端", "自动生成Schema", "迁移数据库"}
+		loopMenu := []string{"创建表格", "Deno创建表格", "创建Prisma客户端", "自动生成Schema", "迁移数据库"}
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
-			fmt.Println("deno run -A --unstable ./create_table.ts")
-			util.ExecCommand("make create-table")
+			util.ExecCommand("create_table")
 		case 2:
-			fmt.Println("go run github.com/prisma/prisma-client-go generate")
-			util.ExecCommand("make prisma-generate")
+			util.ExecCommand("deno run -A --unstable ./create_table.ts")
 		case 3:
-			fmt.Println("go run github.com/prisma/prisma-client-go introspect")
-			util.ExecCommand("make prisma-introspect")
+			util.ExecCommand("go run github.com/prisma/prisma-client-go generate")
 		case 4:
-			fmt.Println("go run github.com/prisma/prisma-client-go db push --preview-feature")
-			util.ExecCommand("make prisma-push")
+			util.ExecCommand("go run github.com/prisma/prisma-client-go introspect")
+		case 5:
+			util.ExecCommand("go run github.com/prisma/prisma-client-go db push --preview-feature")
 		default:
 			break exit
 		}
