@@ -101,9 +101,11 @@ async function menu() {
   console.table(mergedOptions)
 
   // TODO: choose tables model from list by table name
-  answers.tables.forEach((v) => {
-    defaultTables.push(extraTables[v])
-  })
+  if (answers.tables !== undefined) {
+    answers.tables.forEach((v) => {
+      defaultTables.push(extraTables[v])
+    })
+  }
   if (answers.procede === true) {
     console.log("Creating tables for  you...")
     createTable(mergedOptions, defaultTables)
