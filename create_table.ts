@@ -102,7 +102,7 @@ async function menu() {
 
   // TODO: choose tables model from list by table name
   answers.tables.forEach((v) => {
-    defaultTables.push(extraTables[answers.tables[v]])
+    defaultTables.push(extraTables[v])
   })
   if (answers.procede === true) {
     console.log("Creating tables for  you...")
