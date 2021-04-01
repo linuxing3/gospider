@@ -32,7 +32,7 @@ type Page struct {
 }
 
 var (
-	DoubanBaseUrl = "https://movie.douban.com/top250"
+	DoubanBaseUrl         = "https://movie.douban.com/top250"
 	DoubanTopPageSelector = "#content > div > div.article > div.paginator > a"
 )
 
@@ -62,7 +62,7 @@ func GetPages(url string) (pages []Page) {
 // ParseMovies 在每一个页面上分析电影数据
 func ParseMovies(doc *goquery.Document) (movies []DoubanMovie) {
 	movieSelector := "#content > div > div.article > ol > li"
-  doc.Find(movieSelector).Each(func(i int, s *goquery.Selection) {
+	doc.Find(movieSelector).Each(func(i int, s *goquery.Selection) {
 
 		fmt.Printf("获取第 %d 个电影\n", i)
 
@@ -113,7 +113,7 @@ func ParseMovies(doc *goquery.Document) (movies []DoubanMovie) {
 }
 
 // SaveMovies 保存电影记录到数据库
-func SaveMovies(movies []DoubanMovie)  {
+func SaveMovies(movies []DoubanMovie) {
 
 	client := db.NewClient()
 	if err := client.Prisma.Connect(); err != nil {
@@ -137,37 +137,37 @@ func SaveMovies(movies []DoubanMovie)  {
 			db.Movies.Tag.Set(movie.Tag),
 			db.Movies.Star.Set(movie.Star),
 		).Exec(ctx)
-    if err != nil {
+		if err != nil {
 			fmt.Println(err)
-    }
+		}
 	}
-	
+
 }
 
 // ExampleScrape 测试抓取网页
 func ExampleScrape() {
-  // Request the HTML page.
-  res, err := http.Get("http://metalsucks.net")
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer res.Body.Close()
-  if res.StatusCode != 200 {
-    log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
-  }
+	// Request the HTML page.
+	res, err := http.Get("http://metalsucks.net")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+	}
 
-  // Load the HTML document
-  doc, err := goquery.NewDocumentFromReader(res.Body)
-  if err != nil {
-    log.Fatal(err)
-  }
+	// Load the HTML document
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("Example scrapy")
-  // Find the review items
-  doc.Find(".sidebar-reviews article .content-block").Each(func(i int, s *goquery.Selection) {
-    // For each item found, get the band and title
-    band := s.Find("a").Text()
-    title := s.Find("i").Text()
-    fmt.Printf("Review %d: %s - %s\n", i, band, title)
-  })
+	// Find the review items
+	doc.Find(".sidebar-reviews article .content-block").Each(func(i int, s *goquery.Selection) {
+		// For each item found, get the band and title
+		band := s.Find("a").Text()
+		title := s.Find("i").Text()
+		fmt.Printf("Review %d: %s - %s\n", i, band, title)
+	})
 }

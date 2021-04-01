@@ -33,6 +33,8 @@ to quickly create records in postgressql.`,
 			scrapGoogleNews(keyWord)
 		} else if webSite == "iciba" {
 			scrapIciba()
+		} else if webSite == "cda" {
+			scrapCda(keyWord)
 		} else {
 			spiderMenu()
 		}
@@ -46,7 +48,7 @@ exit:
 		fmt.Println()
 		fmt.Print(util.Cyan("请选择"))
 		fmt.Println()
-		loopMenu := []string{"iciba", "douban", "hacknews", "googlenews"}
+		loopMenu := []string{"iciba", "douban", "hacknews", "googlenews", "cda"}
 		choice := util.LoopInput("回车退出:   ", loopMenu, false)
 		switch choice {
 		case 1:
@@ -61,10 +63,31 @@ exit:
 		case 4:
 			script := "docker exec -it spider /root/go/bin/gospider spider --website=googlenews"
 			util.ExecCommand(script)
+		case 5:
+			script := "docker exec -it spider /root/go/bin/gospider spider --website=cda"
+			util.ExecCommand(script)
 		default:
 			break exit
 		}
 	}
+}
+
+func scrapCda(cid string) {
+
+	c := InitChromedpOptions()
+	chromeCtx, cancel := chromedp.NewContext(c, chromedp.WithLogf(log.Printf))
+	defer cancel()
+
+	chromedp.Run(chromeCtx, make([]chromedp.Action, 0, 1)...)
+	timeoutCtx, cancel := context.WithTimeout(chromeCtx, 3600*time.Second)
+	defer cancel()
+
+	if err := chromedp.Run(timeoutCtx, LoginCda("https://e-cda.cn/")); err != nil {
+		log.Fatal(err)
+	}
+	// 直接播放或抓取链接
+	courses := GetCdaCoursesWithDetails(cid);
+	fmt.Println(courses)
 }
 
 // 爬取scrapGoogleNews
@@ -129,6 +152,39 @@ func scrapDouban() {
 // selector [string] 必须显示的元素
 // sel [interface] 要抓取的元素
 func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, error) {
+	c := InitChromedpOptions()
+
+	chromeCtx, cancel := chromedp.NewContext(c, chromedp.WithLogf(log.Printf))
+	// 执行一个空task, 用提前创建Chrome实例
+	chromedp.Run(chromeCtx, make([]chromedp.Action, 0, 1)...)
+
+	//创建一个上下文超时时间为40s
+	timeoutCtx, cancel := context.WithTimeout(chromeCtx, 400*time.Second)
+	defer cancel()
+
+	var htmlContent string
+	if err := chromedp.Run(timeoutCtx,
+		chromedp.Navigate(url),
+		chromedp.WaitVisible(selector),
+		chromedp.OuterHTML(sel, &htmlContent, chromedp.ByJSPath),
+	); err != nil {
+		return "", err
+	}
+	return htmlContent, nil
+}
+
+
+// GetDataList 得到数据列表
+func GetDataList(htmlContent string, selector string) (*goquery.Selection, error) {
+	if dom, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent)); err != nil {
+		return nil, err
+	} else {
+		list := dom.Find(selector)
+		return list, nil
+	}
+}
+
+func InitChromedpOptions() context.Context {
 	options := []chromedp.ExecAllocatorOption{
 		chromedp.Flag("headless", true), // debug使用
 		chromedp.Flag("blink-settings", "imagesEnabled=false"),
@@ -138,38 +194,7 @@ func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, e
 	options = append(chromedp.DefaultExecAllocatorOptions[:], options...)
 
 	c, _ := chromedp.NewExecAllocator(context.Background(), options...)
-
-	// create context
-	chromeCtx, cancel := chromedp.NewContext(c, chromedp.WithLogf(log.Printf))
-	// 执行一个空task, 用提前创建Chrome实例
-	chromedp.Run(chromeCtx, make([]chromedp.Action, 0, 1)...)
-
-	//创建一个上下文超时时间为40s
-	timeoutCtx, cancel := context.WithTimeout(chromeCtx, 40*time.Second)
-	defer cancel()
-
-	var htmlContent string
-	err := chromedp.Run(timeoutCtx,
-		chromedp.Navigate(url),
-		chromedp.WaitVisible(selector),
-		chromedp.OuterHTML(sel, &htmlContent, chromedp.ByJSPath),
-	)
-	if err != nil {
-		return "", err
-	}
-
-	return htmlContent, nil
-}
-
-// GetDataList 得到数据列表
-func GetDataList(htmlContent string, selector string) (*goquery.Selection, error) {
-	dom, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
-	if err != nil {
-		return nil, err
-	}
-
-	list := dom.Find(selector)
-	return list, nil
+	return c
 }
 
 func init() {
