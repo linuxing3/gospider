@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	DocBodySelector = "document.querySelector('body')"
 	webSite         = ""
 	keyWord         = ""
 )
@@ -83,7 +82,7 @@ func scrapIciba() {
 
 	url := "http://news.iciba.com/"
 	selector := "body > div.screen > div.banner > div.swiper-container-place > div > div.swiper-slide.swiper-slide-0.swiper-slide-visible.swiper-slide-active > a.item.item-big > div.item-bottom"
-	htmlContent, err := config.GetHTTPHtmlContent(url, selector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(url, selector, config.DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,7 +112,7 @@ func scrapDouban() {
 	var movies []DoubanMovie
 	for index, page := range pages {
 		fmt.Printf("获取 %d 页！\n", index)
-		pageContent, _ := config.GetHTTPHtmlContent(page.Url, movieSelector, DocBodySelector)
+		pageContent, _ := config.GetHTTPHtmlContent(page.Url, movieSelector, config.DocBodySelector)
 		pageDom, err := goquery.NewDocumentFromReader(strings.NewReader(pageContent))
 		if err != nil {
 			log.Fatal(err)

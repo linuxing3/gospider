@@ -39,7 +39,7 @@ var (
 
 // GetPages 获取分页
 func GetPages(url string) (pages []Page) {
-	htmlContent, err := config.GetHTTPHtmlContent(DoubanBaseUrl, DoubanTopPageSelector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(DoubanBaseUrl, DoubanTopPageSelector, config.DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}

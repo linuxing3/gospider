@@ -25,7 +25,7 @@ var (
 func GetArticles(url string, keyword string) (articles []GoogleNewsArticle) {
 
 	VenBaseUrl = strings.Replace(VenBaseUrl, "venezuela", keyword, 1)
-	htmlContent, err := config.GetHTTPHtmlContent(VenBaseUrl, VenAritcleSelector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(VenBaseUrl, VenAritcleSelector, config.DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +73,7 @@ func SaveArticle(articles []GoogleNewsArticle)  {
 }
 
 func GetArticleDetail(url string) {
-	htmlContent, err := config.GetHTTPHtmlContent(url, "", DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(url, "", config.DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
