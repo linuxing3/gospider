@@ -85,9 +85,25 @@ func scrapCda(cid string) {
 	if err := chromedp.Run(timeoutCtx, LoginCda("https://e-cda.cn/")); err != nil {
 		log.Fatal(err)
 	}
+	time.Sleep(5*time.Second)
 	// 直接播放或抓取链接
 	courses := GetCdaCoursesWithDetails(cid);
 	fmt.Println(courses)
+}
+
+func playCdaCourse(cid string) {
+
+	c := InitChromedpOptions()
+	chromeCtx, cancel := chromedp.NewContext(c, chromedp.WithLogf(log.Printf))
+	defer cancel()
+
+	chromedp.Run(chromeCtx, make([]chromedp.Action, 0, 1)...)
+	timeoutCtx, cancel := context.WithTimeout(chromeCtx, 3600*time.Second)
+	defer cancel()
+
+	if err := chromedp.Run(timeoutCtx, LoginCda("https://e-cda.cn/"), ShowCdaCoursesList(), PlayCdaCourseVideo()); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // 爬取scrapGoogleNews

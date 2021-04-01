@@ -13,7 +13,8 @@ type Course struct {
 	Title    string
 	Url      string
 	Progress string
-	Cid string
+	Cid      string
+	v        []string
 }
 
 var (
@@ -48,7 +49,6 @@ func ShowCdaCoursesList() chromedp.Tasks {
 	return chromedp.Tasks{
 		// 2. 打开课程列表
 		chromedp.WaitVisible(CdaCourseRow, chromedp.NodeVisible),
-		// div.join_special_main > div > div:nth-child(1) > div.clearfix > ul > li:nth-child(1) > h2
 		chromedp.Click(CdaCourseSelector, chromedp.NodeVisible),
 	}
 }
@@ -91,19 +91,19 @@ func GetCdaCoursesWithDetails(cid string) (courses []Course) {
 		url, _ := item.Attr("href")
 		title := item.Text()
 		progress := s.Find("h_pro_percent").Text()
-		
+
 		var cid string
 
-		cid, _  = s.Find(".hover_btn").Attr("onclick")
+		cid, _ = s.Find(".hover_btn").Attr("onclick")
 		cid = strings.ReplaceAll(cid, "addUrl(", "")
 		cid = strings.ReplaceAll(cid, ")", "")
-		
+
 		pageURL := strings.Join([]string{CdaBaseURL, url}, "")
 		courses = append(courses, Course{
-			Title: title,
-			Url:   pageURL,
+			Title:    title,
+			Url:      pageURL,
 			Progress: progress,
-			Cid: cid,
+			Cid:      cid,
 		})
 		fmt.Println(title)
 	})
@@ -111,7 +111,7 @@ func GetCdaCoursesWithDetails(cid string) (courses []Course) {
 }
 
 // GetCdaCourseVideo 根据课程列表, 抓取视频下载地址
-func GetCdaCourseVideo(courses []Course) {
+func GetCdaCourseVideo(courses []Course) []Course{
 	for _, course := range courses {
 		videoPageURL := strings.Join([]string{"https://e-cda.cn/portal/play.do?menu=course&id=", course.Cid}, "")
 		htmlContent, _ := GetHTTPHtmlContent(videoPageURL, "video", DocBodySelector)
@@ -120,6 +120,8 @@ func GetCdaCourseVideo(courses []Course) {
 			url, _ := s.Attr("src")
 			videoDownloadLink := strings.Join([]string{"https://cdn.gwypx.com.cn/course/n", course.Cid, "/", url}, "")
 			fmt.Println(videoDownloadLink)
+			course.v = append(course.v, videoDownloadLink)
 		})
 	}
+	return courses
 }
