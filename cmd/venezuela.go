@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/linuxing3/gospider/config"
 	"github.com/linuxing3/gospider/prisma/db"
 )
 
@@ -24,12 +25,12 @@ var (
 func GetArticles(url string, keyword string) (articles []GoogleNewsArticle) {
 
 	VenBaseUrl = strings.Replace(VenBaseUrl, "venezuela", keyword, 1)
-	htmlContent, err := GetHTTPHtmlContent(VenBaseUrl, VenAritcleSelector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(VenBaseUrl, VenAritcleSelector, DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	articleList, err := GetDataList(htmlContent, VenAritcleSelector)
+	articleList, err := config.GetDataList(htmlContent, VenAritcleSelector)
 	if err != nil {
 		log.Fatal("No list")
 	}
@@ -72,7 +73,7 @@ func SaveArticle(articles []GoogleNewsArticle)  {
 }
 
 func GetArticleDetail(url string) {
-	htmlContent, err := GetHTTPHtmlContent(url, "", DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(url, "", DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}

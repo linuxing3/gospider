@@ -9,6 +9,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/chromedp/chromedp"
+	"github.com/linuxing3/gospider/config"
 	"github.com/linuxing3/vpsman/util"
 	"github.com/spf13/cobra"
 )
@@ -119,11 +120,11 @@ func scrapIciba() {
 
 	url := "http://news.iciba.com/"
 	selector := "body > div.screen > div.banner > div.swiper-container-place > div > div.swiper-slide.swiper-slide-0.swiper-slide-visible.swiper-slide-active > a.item.item-big > div.item-bottom"
-	htmlContent, err := GetHTTPHtmlContent(url, selector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(url, selector, DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
-	sentenceList, err := GetDataList(htmlContent, ".chinese")
+	sentenceList, err := config.GetDataList(htmlContent, ".chinese")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -149,7 +150,7 @@ func scrapDouban() {
 	var movies []DoubanMovie
 	for index, page := range pages {
 		fmt.Printf("获取 %d 页！\n", index)
-		pageContent, _ := GetHTTPHtmlContent(page.Url, movieSelector, DocBodySelector)
+		pageContent, _ := config.GetHTTPHtmlContent(page.Url, movieSelector, DocBodySelector)
 		pageDom, err := goquery.NewDocumentFromReader(strings.NewReader(pageContent))
 		if err != nil {
 			log.Fatal(err)
@@ -161,56 +162,6 @@ func scrapDouban() {
 	// save movies
 	fmt.Println("保存电影记录到数据库！")
 	SaveMovies(movies)
-}
-
-// GetHTTPHtmlContent 获取网站上爬取的数据
-// url [string] 网址
-// selector [string] 必须显示的元素
-// sel [interface] 要抓取的元素
-func GetHTTPHtmlContent(url string, selector string, sel interface{}) (string, error) {
-	c := InitChromedpOptions()
-
-	chromeCtx, cancel := chromedp.NewContext(c, chromedp.WithLogf(log.Printf))
-	// 执行一个空task, 用提前创建Chrome实例
-	chromedp.Run(chromeCtx, make([]chromedp.Action, 0, 1)...)
-
-	//创建一个上下文超时时间为40s
-	timeoutCtx, cancel := context.WithTimeout(chromeCtx, 400*time.Second)
-	defer cancel()
-
-	var htmlContent string
-	if err := chromedp.Run(timeoutCtx,
-		chromedp.Navigate(url),
-		chromedp.WaitVisible(selector),
-		chromedp.OuterHTML(sel, &htmlContent, chromedp.ByJSPath),
-	); err != nil {
-		return "", err
-	}
-	return htmlContent, nil
-}
-
-
-// GetDataList 得到数据列表
-func GetDataList(htmlContent string, selector string) (*goquery.Selection, error) {
-	if dom, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent)); err != nil {
-		return nil, err
-	} else {
-		list := dom.Find(selector)
-		return list, nil
-	}
-}
-
-func InitChromedpOptions() context.Context {
-	options := []chromedp.ExecAllocatorOption{
-		chromedp.Flag("headless", true), // debug使用
-		chromedp.Flag("blink-settings", "imagesEnabled=false"),
-		chromedp.UserAgent(`Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36`),
-	}
-	//初始化参数先传一个空的数据
-	options = append(chromedp.DefaultExecAllocatorOptions[:], options...)
-
-	c, _ := chromedp.NewExecAllocator(context.Background(), options...)
-	return c
 }
 
 func init() {

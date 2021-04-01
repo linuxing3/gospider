@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/linuxing3/gospider/config"
 	"github.com/linuxing3/gospider/prisma/db"
 )
 
@@ -38,12 +39,12 @@ var (
 
 // GetPages 获取分页
 func GetPages(url string) (pages []Page) {
-	htmlContent, err := GetHTTPHtmlContent(DoubanBaseUrl, DoubanTopPageSelector, DocBodySelector)
+	htmlContent, err := config.GetHTTPHtmlContent(DoubanBaseUrl, DoubanTopPageSelector, DocBodySelector)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pageList, err := GetDataList(htmlContent, DoubanTopPageSelector)
+	pageList, err := config.GetDataList(htmlContent, DoubanTopPageSelector)
 	if err != nil {
 		log.Fatal("No list")
 	}
